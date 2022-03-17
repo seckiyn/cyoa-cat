@@ -17,6 +17,9 @@ FPS = 60
 
 things = pygame.init() # Init the pygame
 
+new_bit = lit.create_bit(1, "im.png", "hello_there", starting_pos=(12, 66))
+second_bit = lit.create_bit(2, "im.png", "hoi!")
+
 def main():
     """ Main function """
     screen = pygame.display.set_mode(SIZE) # start screen surface
@@ -34,7 +37,8 @@ def main():
 
         # Paint according to events
         screen.fill(Col.blue) # Remove the buffer
-        lit.blit_file(screen, "im.png", (0,0),"img")
+        # lit.blit_file(screen, "im.png", (0,0),"img")
+        lit.place_all_bits(screen)
 
 
         # Paint them to screen
