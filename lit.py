@@ -62,12 +62,13 @@ def tuple_to_rect(filename, my_tuple):
     image_rect.x = my_tuple[0] # Set x to the tuple's x
     image_rect.y = my_tuple[1] # Set y to the tuple's y
     return image_rect
-def bit(bit_id, filename, title, starting_pos, explanation=""):
+def bit(bit_id, filename, title, starting_pos, explanation="", action=None):
     """
         filename: str -> Name of the image of bit
         title: str -> Title of the bit will show on the ha2
         starting_pos: pygame.Rect or tuple -> Position of the bit
         explanation: str -> Long explanation of the bit
+        action: function -> Function to the when pressed
         Will return a dict contains of:
             {
             BIT_ID
@@ -75,6 +76,7 @@ def bit(bit_id, filename, title, starting_pos, explanation=""):
             RECT/POS
             TITLE
             EXPLANATION
+            ACTION
             }
     """
     my_bit = {
@@ -86,13 +88,15 @@ def bit(bit_id, filename, title, starting_pos, explanation=""):
             }
     return my_bit
 
-def create_bit(bit_id, filename, title, starting_pos=None, explanation=""):
+def create_bit(bit_id, filename, title, starting_pos=None, explanation="", action=None):
     """ Creates a bit and adds it to the BITS list """
     if not starting_pos: # If there's no position given
         if len(BIT_LIST) > 0: # If there's a bit in bit_list starting pos is spaces according to it
-            last_pos = BIT_LIST[-1]["pos"]
-            last_pos.y = SPACING # TODO: Get the rects center x pos and add this to is
-            starting_pos = last_pos
+            last_bit = BIT_LIST[-1]
+            last_pos = last_bit["pos"]
+            x, y = last_pos.topright
+            x += SPACING
+            starting_pos = tuple_to_rect(filename, (x, y))
         else:
             starting_pos = tuple_to_rect(filename, (0, 0)) # If there's no last bit starting pos is origin
     else:
@@ -101,7 +105,7 @@ def create_bit(bit_id, filename, title, starting_pos=None, explanation=""):
                 starting_pos = tuple_to_rect(filename, starting_pos) # Try to change iterable object to Rect
             except TypeError as e:
                 raise Exception("Cannot create bit " + str(e)) # If cannot translate to Rect raise an exception
-    my_bit = bit(bit_id, filename, title, starting_pos, explanation)
+    my_bit = bit(bit_id, filename, title, starting_pos, explanation, action)
     BIT_LIST.append(my_bit) # Add bit to the bit list
     return my_bit # Return the bit
 def place_bit(surface, my_bit):
@@ -115,6 +119,7 @@ def place_bit(surface, my_bit):
 
 def place_all_bits(surface):
     """ Blit all the bits on the surface """
+    log("Placing all bits")
     for my_bit in BIT_LIST:
         place_bit(surface, my_bit)
 def get_bit(bit_id):

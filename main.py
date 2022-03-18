@@ -20,6 +20,8 @@ things = pygame.init() # Init the pygame
 new_bit = lit.create_bit(1, "im.png", "hello_there", starting_pos=(12, 66))
 second_bit = lit.create_bit(2, "im.png", "hoi!")
 
+print(lit.BIT_LIST)
+
 def main():
     """ Main function """
     screen = pygame.display.set_mode(SIZE) # start screen surface
