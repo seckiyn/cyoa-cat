@@ -7,6 +7,7 @@ import logging
 PATH = os.path.dirname(os.path.abspath(__file__)) # Path of the script
 IMG_FOLDER = "img" # Images folder
 BIT_LIST = list() # Change this into better container
+CLICKED_BITS = list()
 SPACING = 20 # Spacing of the bits
 # LOGGING
 logging.basicConfig(format='%(asctime)s %(message)s',\
@@ -84,7 +85,8 @@ def bit(bit_id, filename, title, starting_pos, explanation="", action=None):
             "image_name": filename,
             "title": title,
             "pos": starting_pos,
-            "exp": explanation
+            "exp": explanation,
+            "action": action
             }
     return my_bit
 
@@ -124,4 +126,52 @@ def place_all_bits(surface):
         place_bit(surface, my_bit)
 def get_bit(bit_id):
     """ Gets bit_id and returns corresponding bit """
-    pass
+    log(f"Getting bit id: {bit_id}")
+    for my_bit in BIT_LIST: # Iterate over BIT_LIST
+        if my_bit["bit_id"] == bit_id: # If current bit's bit_id equals given bit_id return current bit
+            return my_bit
+
+def do_bit_action(my_bit):
+    """ Do the action of my_bit's action """
+    print("BAAA!!!")
+    action = my_bit["action"]
+    if action:
+        action()
+def handle_click(mouse_pressed):
+    x, y = pygame.mouse.get_pos() # Get the current position of mouse
+    for my_bit in BIT_LIST:
+        my_rect = my_bit["pos"] # Get position of bit
+        start_x = my_rect.left # Starting pos of x
+        stop_x = my_rect.right # Stopping pos of x
+        start_y = my_rect.top # Starting pos of y
+        stop_y = my_rect.bottom # Stopping pos of y
+        if start_x < x < stop_x and start_y < y < stop_y and mouse_pressed: # If mouse inside rect and mouse pressed do this action
+            # Do action
+            do_bit_action(my_bit)
+            print("You son of a bitch, I'm in {}".format(my_bit["bit_id"]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
