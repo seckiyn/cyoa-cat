@@ -39,6 +39,7 @@ def main():
                 if event.key == pygame.K_ESCAPE: # If esc pressed
                     sys.exit(1) # Exit the program
             if event.type == pygame.MOUSEBUTTONUP:
+                lit.change_bit_pos((123,123), bit_id=1)
                 lit.handle_click(True)
         # Process events
 

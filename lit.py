@@ -78,6 +78,7 @@ def bit(bit_id, filename, title, starting_pos, explanation="", action=None):
             TITLE
             EXPLANATION
             ACTION
+            SIZE?
             }
     """
     my_bit = {
@@ -86,7 +87,7 @@ def bit(bit_id, filename, title, starting_pos, explanation="", action=None):
             "title": title,
             "pos": starting_pos,
             "exp": explanation,
-            "action": action
+            "action": action,
             }
     return my_bit
 
@@ -137,6 +138,34 @@ def do_bit_action(my_bit):
     action = my_bit["action"]
     if action:
         action()
+
+def change_bit_pos(new_pos, new_bit=None, bit_id=None):
+    """ Change the position of """
+    if not new_bit and bit_id:
+        new_bit = get_bit(bit_id)
+
+    pos = new_bit["pos"] # Get the pos object of bit
+    new_x, new_y = None, None # Newx and Newy
+    if type(new_pos) == pygame.Rect: # If new position is pygame.Rect object
+        new_x, new_y = new_pos.x, new_pos.y # Set new_x and new_y
+    else:
+        try:
+            new_x, new_y = new_pos # Iterate new_pos
+        except TypeError as e: # If new_pos is not iterable
+            print("Cannot unpack positions error:", str(e))
+        except ValueError as e: # If new_pos is not enough or too much to unpack
+            print("Not enough to unpack", str(e))
+    pos.x += new_x # Add new_x to the x of the pos
+    pos.y += new_y # Add new_y to the y of the pos
+    new_bit["pos"] = pos # Change the pos
+    bit_id = new_bit["bit_id"] # Get the bit id
+    for index, bit_ in enumerate(BIT_LIST): # Iterate ove BIT_LIST and remove it
+        if new_bit["bit_id"] == bit_: # If id is same remove it from BIT_LIST
+            del BIT_LIST[index] # TODO: Check if i Can remove just new_bit iterated object?
+            BIT_LIST.append(new_bit)
+            return True
+    return False
+
 def handle_click(mouse_pressed):
     x, y = pygame.mouse.get_pos() # Get the current position of mouse
     for my_bit in BIT_LIST:
